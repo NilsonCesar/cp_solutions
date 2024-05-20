@@ -21,9 +21,7 @@ int main(void) {
 
     for(int i = 0; i < q; i++) {
         cin >> l >> r;
-        if(l == 0) cout << sumpref[r];
-        else cout << sumpref[r] - sumpref[l];
-        cout << '\n';
+        cout << sumpref[r] - sumpref[l] << '\n';
     }
 
     return 0;
