@@ -11,6 +11,12 @@ void mainIO(string s = "") {
 
 int main(void) {
     mainIO();
-
+    int n, ans = 0;
+    cin >> n;
+    n *= 2;
+    vector<int> clothes(n);
+    for(int i = 0; i < n; i++) cin >> clothes[i];
+    for(int i = 0; i < n - 2; i++) ans += (clothes[i] == clothes[i + 2]);
+    cout << ans << '\n';
     return 0;
 }
