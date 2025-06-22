@@ -11,22 +11,17 @@ void mainIO(string s = "") {
 
 int main(void) {
     mainIO();
-    int t, n, k, ans, c = 0;
+    int t, n, k, ans;
     cin >> t;
     while(t--) {
         cin >> n >> k;
         if (k < n) cout << k;
         else if (k == n) cout << k + 1;
         else {
-            c = 0;
-            ans = k;
-            while (k > n) {
-                c += k % n;
-                k /= n;
-                ans += k;
-            }
-            if (ans % n == 0) ans++;
-            cout << ans + (c / (n - 1));
+            ans = k / (n - 1);
+            // cout << ans << ' ' << k << '\n';
+            if ((ans + k) % (n) == 0) cout << k + ans - 1;
+            else cout << k + ans;
         }
         cout << '\n';
     }
