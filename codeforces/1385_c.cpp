@@ -14,16 +14,20 @@ int main(void) {
     int t;
     cin >> t;
     while(t--) {
-        int n;
+        int n, ans;
         cin >> n;
-        vector<int> a(n + 1), pref(n + 1, -1), suff(n + 2, -1);
-        for (int i = 1; i <= n; i++) cin >> a[i];
-        int ans = 1;
-        for (int i = 1; i <= n; i++) pref[i] = max(pref[i - 1], a[i]);
-        for (int i = n; i >= 1; i--) suff[i] = max(suff[i + 1], a[i]);
-        for (int i = 1; i < n; i++) {
-            if (a[i] < pref[i - 1] && a[i] < suff[i + 1]) ans = i - 1;
+        vector<int> a(n);
+        ans = n - 1;
+
+        for (int i = 0; i < n; i++) cin >> a[i];
+
+        if (n <= 2) {
+            cout << 0 << '\n';
+            continue;
         }
+        
+        while (ans > 0 && a[ans - 1] >= a[ans]) ans--;
+        while (ans > 0 && a[ans - 1] <= a[ans]) ans--;
 
         cout << ans << '\n';
     }
