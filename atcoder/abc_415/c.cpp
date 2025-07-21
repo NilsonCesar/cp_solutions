@@ -3,20 +3,29 @@
 #include <vector>
 #include <algorithm>
 #include <cmath>
+#include <map>
 
 bool ans;
 int c;
 long long mix;
 std::string s;
+std::map<long long, bool> memo, visited;
 
-void solve(long long numero) {
-    if (ans) {
-        return;
-    }
-    
+
+bool solve(long long numero) {
+    // std::cout << numero << ' ' << memo[numero] << '\n';
     if (numero == 0) {
         ans = true;
-        return;
+        return true;
+    }
+
+    if (visited[numero]) {
+        return memo[numero];
+    }
+    visited[numero] = true;
+
+    if (ans) {
+        return true;
     }
 
     for (int i = 0; i < c; ++i) {
@@ -27,9 +36,12 @@ void solve(long long numero) {
                 continue;
             }
             
-            solve(temp);
+            memo[temp] = solve(temp);
+            if (!memo[numero]) memo[numero] = memo[temp];
         }
     }
+
+    return memo[numero];
 }
 
 void run_test_case() {
@@ -73,8 +85,11 @@ int main() {
 
     int t;
     std::cin >> t;
+    memo[0] = true;
     while (t--) {
         run_test_case();
+        memo.clear();
+        visited.clear();
     }
 
     return 0;
