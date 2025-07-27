@@ -15,7 +15,6 @@ int main(void) {
     cin >> n;
     int v = n;
     vector<int> a(n);
-    vector<bool> held(n, false);
     for (int i = 0; i < n; i++) cin >> a[i];
     sort(a.begin(), a.end());
     int i = n / 2 - 1, j = n - 1;
@@ -25,7 +24,6 @@ int main(void) {
     while(i >= 0 && j >= 0) {
         // cout << i << ' ' << j << ' ' << v << '\n';
         if (a[i] * 2 <= a[j]) {
-            held[i] = true;
             j--;
             v--;
         }
