@@ -9,61 +9,61 @@ void mainIO(string s = "") {
     }
 }
 
-int n, m, is, js, ig, jg, ans = 1e8;
-vector<int> dirX = {0, 0, 1, -1}, dirY = {1, -1, 0, 0};
-vector<vector<char>> grid;
-vector<vector<bool>> visited;
+struct s
+{
+    int x, y;
+    int step;
+    int dir;
+};
 
-void fillGrid(int i, int j, int par, int tmpAns) {
-    cout << i << ' ' << j << ' ' << par << ' ' << tmpAns << '\n';
-    if (tmpAns >= ans) return;
-    if (grid[i][j] == 'G') {
-        ans = min(ans, tmpAns);
-        return;
-    }
-    for (int d = 0; d < 4; d++) {
-        int ni = i + dirX[d], nj = j + dirY[d];
-        if (ni >= 0 && ni < n && nj >= 0 && nj < n) {
-            if (grid[ni][nj] == '#') continue;
-            else if (grid[ni][nj] == 'o' || grid[ni][nj] == 'x') {
-                if (par % 2 == 0 && grid[ni][nj] == 'o') {
-                    fillGrid(ni, nj, par, tmpAns + 1);
-                } else if (grid[ni][nj] == 'x') {
-                    fillGrid(ni, nj, par, tmpAns + 1);
-                }
-            } else if (grid[ni][nj] == '?') {
-                visited[i][j] = false;
-                fillGrid(ni, nj, par + 1, tmpAns + 1);
-                visited[i][j] = true;
-            } else {
-                fillGrid(ni, nj, par, tmpAns + 1);
-            }
-        }
-    }
-    visited[i][j] = false;
-}
 
+vector<int> dx = {0, 0, -1, 1}, dy = {-1, 1, 0, 0};
 
 int main(void) {
     mainIO();
-    cin >> n >> m;
-    grid.resize(n, vector<char>(m));
-    visited.resize(n, vector<bool>(m, false));
-    for (int i = 0; i < n; i++) {
-        for (int j = 0; j < m; j++) {
+    int h, w;
+    cin >> h >> w;
+
+    vector<vector<char>> grid(505, vector<char>(505));
+    vector<vector<vector<int>>> dp(505, vector<vector<int>>(505, vector<int>(2, 1e8)));
+    queue<s> q;
+
+    for (int i = 0; i < h; i++) {
+        for (int j = 0; j < w; j++) {
             cin >> grid[i][j];
             if (grid[i][j] == 'S') {
-                is = i;
-                js = j;
-            } else if (grid[i][j] == 'G') {
-                ig = i;
-                jg = j;
+                dp[i][j][0] = 0;
+                q.push({i, j, 0, 0});
             }
         }
     }
-    fillGrid(is, js, 0, 0);
 
-    cout << ans << '\n';
+    while(!q.empty()) {
+        s a = q.front();
+        q.pop();
+        if (a.step > dp[a.x][a.y][a.dir]) continue;
+        if (grid[a.x][a.y] == 'G') {
+            cout << a.step << '\n';
+            return 0;
+        }
+        for (int i = 0; i < 4; i++) {
+            int nx = a.x + dx[i];
+            int ny = a.y + dy[i];
+
+            if (nx < 0 || nx >= h || ny < 0 || ny >= w) continue;
+            if (grid[nx][ny] == '#') continue;
+            if (grid[nx][ny] == 'x' && a.dir == 0) continue;
+            if (grid[nx][ny] == 'o' && a.dir == 1) continue;
+            int nstep = a.step + 1;
+            int ndir = (a.dir + (grid[nx][ny] == '?')) % 2;
+            if (nstep < dp[nx][ny][ndir]) {
+                dp[nx][ny][ndir] = nstep;
+                q.push({nx, ny, nstep, ndir});
+            }
+        }
+    }
+
+    cout << -1 << '\n';
 
     return 0;
 }
