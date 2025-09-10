@@ -9,51 +9,52 @@ void mainIO(string s = "") {
     }
 }
 
-int n;
-vector<int> people;
-map<int, int> freq, freqSeq, visited;
-long long memo[5010][5010];
-
-long long dp(int l, int r) {
-    if (memo[l][r] != -1) return memo[l][r];
-    bool valid = true;
-    for (int i = l; i <= r; i++) {
-        for (int j = i + 1; j <= r; j++) {
-            freqSeq.clear();
-            for (int k = i; k <= j; k++)
-                freqSeq[people[k]]++;
-            for (int k = i; k <= j; k++) {
-                if (freqSeq[people[k]] != freq[people[k]]) {
-                    valid = false;
-                    break;
-                }
-            } 
-            if (!valid) break;
-            if (memo[i][j] != -1) {
-                memo[l][r] = max(memo[l][r], memo[i][j]);
-            }
-            visited.clear();
-
-            for (int k = i; k <= j; k++) {
-                if (freqSeq[people[k]] != freq[people[k]]) {
-                    valid = false;
-                    break;
-                }
-            } 
-        }
-    }
-}
+#define MAXN 5050
 
 int main(void) {
     mainIO();
+    int n;
     cin >> n;
-    people.resize(n);
-    memset(memo, -1, sizeof(memo));
+    vector<int> a(n);
+
+    vector<int> first_occur(MAXN, -1), last_occur(MAXN, -1);
+
     for (int i = 0; i < n; i++) {
-        cin >> people[i];
-        freq[people[i]]++;
+        cin >> a[i];
+        if (first_occur[a[i]] == -1)
+            first_occur[a[i]] = i;
+        last_occur[a[i]] = i;
     }
-    cout << dp(0, n - 1) << '\n';
+
+    vector<long long> dp(n + 1, 0);
+
+    vector<int> visted_timestamp(MAXN, 0);
+
+    for (int i = 1; i <= n; i++) {
+        dp[i] = dp[i - 1];
+
+        long long sequence_xor = 0;
+        int min_occur = i - 1;
+        int max_occur = i - 1;
+
+        for (int j = i - 1; j >= 0; j--) {
+            int city = a[j];
+
+            min_occur = min(min_occur, first_occur[city]);
+            max_occur = max(max_occur, last_occur[city]);
+
+            if (visted_timestamp[city] != i) {
+                visted_timestamp[city] = i;
+                sequence_xor ^= city;
+            }
+
+            if (min_occur == j && max_occur == i - 1) 
+                dp[i] = max(dp[i], dp[j] + sequence_xor);
+            
+        }
+    }
+
+    cout << dp[n] << '\n';
 
     return 0;
 }
