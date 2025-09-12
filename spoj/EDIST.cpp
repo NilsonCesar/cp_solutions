@@ -23,23 +23,23 @@ int main(void) {
         for (int j = 0; j <= (int) B.size(); j++)
             lcs[0][j] = j;
 
-        for (int i = (int) A.size(); i > 0; i--) {
-            for (int j = (int) B.size(); j > 0; j--) {
-                if (A[i - 1] == B[j - 1]) lcs[i][j] = lcs[i + 1][j + 1];
-                else {
-                    lcs[i][j] = 1 + min(lcs[i + 1][j + 1], min(lcs[i][j + 1], lcs[i + 1][j]));
-                }
-            }
-        }
-
-        // for (int i = 1; i <= (int) A.size(); i++) {
-        //     for (int j = 1; j <= (int) B.size(); j++) {
-        //         if (A[i - 1] == B[j - 1]) lcs[i][j] = lcs[i - 1][j - 1]; // <-- corner case
+        // for (int i = (int) A.size(); i >= 0; i--) {
+        //     for (int j = (int) B.size(); j >= 0; j--) {
+        //         if (A[i] == B[j]) lcs[i][j] = lcs[i + 1][j + 1];
         //         else {
-        //             lcs[i][j] = 1 + min(lcs[i - 1][j - 1], min(lcs[i][j - 1], lcs[i - 1][j]));
+        //             lcs[i][j] = 1 + min(lcs[i + 1][j + 1], min(lcs[i][j + 1], lcs[i + 1][j]));
         //         }
         //     }
         // }
+
+        for (int i = 1; i <= (int) A.size(); i++) {
+            for (int j = 1; j <= (int) B.size(); j++) {
+                if (A[i - 1] == B[j - 1]) lcs[i][j] = lcs[i - 1][j - 1]; // <-- corner case
+                else {
+                    lcs[i][j] = 1 + min(lcs[i - 1][j - 1], min(lcs[i][j - 1], lcs[i - 1][j]));
+                }
+            }
+        }
 
         cout << lcs[(int) A.size()][(int) B.size()] << '\n';
     }
