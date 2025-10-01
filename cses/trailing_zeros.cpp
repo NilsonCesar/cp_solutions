@@ -13,9 +13,11 @@ int main(void) {
     mainIO();
     int n;
     cin >> n;
-    if (n < 5) cout << 0;
-    else if (n <= 9) cout << 1;
-    else cout << 2 * (n / 10);
-    cout << '\n'; 
+    long long trailing_zeros = 0;
+
+    for (int i = 5; n / i >= 1; i *= 5)
+        trailing_zeros += n / i;
+
+    cout << trailing_zeros << '\n'; 
     return 0;
 }
