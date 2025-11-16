@@ -41,8 +41,16 @@ int main(void) {_
 
     long long diffx = xmax - xmin + 1, diffy = ymax - ymin + 1;
 
-    for (int i = 0; i <= k; i++) 
-        resp = max(resp, (diffx + i) * (diffy + k - i));
+    if (diffx > diffy) swap(diffx, diffy);
+
+    if (diffx + k <= diffy) {
+        diffx += k;
+        k = 0;
+        resp = max(resp, diffx * diffy);
+    } else {
+        k -= diffy - diffx;
+        resp = max(resp, (diffy + k / 2) * (diffy + (k + 1) / 2));
+    }
 
     cout << resp << '\n';
 
