@@ -2,77 +2,81 @@
 
 using namespace std;
 
-int main(void) {
-    ios_base::sync_with_stdio(0);
-    cin.tie(nullptr);
-    int n, m, qq;
-    cin >> n >> m;
-    vector<vector<int>> ga(m + 1, vector<int>()), gm(n + 1, vector<int>());
+#define _ cin.tie(NULL); ios_base::sync_with_stdio(false); cout.tie(NULL);
+#define INF 0x3f3f3f3f
+#define MAXN 1001000
 
-    for (int i = 0; i < n; i++) {
-        int qm, a;
-        cin >> qm;
-        for (int j = 0; j < qm; j++) {
-            cin >> a;
-            ga[a].push_back(i + 1);
-            gm[i + 1].push_back(a);
+int n, m;
+vector<int> g[MAXN];
+int pai[MAXN];
+bool visited[MAXN];
+
+
+void dfs(int i) {
+    if (visited[i]) return;
+    visited[i] = true;
+
+    for (auto u: g[i])
+        if (!visited[u]) {
+            pai[u] = i; 
+            dfs(u);
+        }
+}
+
+int main(void) {_
+    cin >> n >> m;
+
+    int q, k;
+    for (int i = 1; i <= n; i++) {
+        cin >> q;
+        for (int j = 0; j < q; j++) {
+            cin >> k;
+            g[m + i].push_back(k);
+            g[k].push_back(m + i);
         }
     }
-    
-    cin >> qq;
-    map<pair<int, int>, pair<int, int>> p;
-    while(qq--) {
-        int x, y;
+
+    for (int i = 1; i <= n + m; i++) {
+        if (visited[i]) continue;
+        pai[i] = -1;
+        dfs(i);
+    }
+
+    cin >> q;
+
+    int x, y;
+    vector<int> px, py;
+
+    while(q--) {
         cin >> x >> y;
-        map<pair<int, int>, bool> visited;
-        bool found = false;
-        queue<pair<int, int>> q;
-        q.push({x, 0});
-        while(!q.empty()) {
-            pair<int, int> node = q.front();
-            // cout << node.first << ' ' << node.second << '\n';
-            q.pop();
-            if (visited.find(node) != visited.end()) continue;
-            visited[node] = true;
-            if (node.first == y) {
-                found = true;
-                break;
-            }
-
-            if (node.second) {
-                for (int actor: gm[node.first]) {
-                    if (visited.find({actor, 0}) != visited.end()) continue;
-                    p[{actor, 0}] = node;
-                    q.push({actor, 0});
-                }
-            } else {
-                for (int movie: ga[node.first]) {
-                    if (visited.find({movie, 1}) != visited.end()) continue;
-                    p[{movie, 1}] = node;
-                    q.push({movie, 1});
-                }
-            }
+        px.clear();
+        py.clear();
+        for (int a = x; a != -1; a = pai[a]) {
+            px.push_back(a);
         }
 
-        if (found) {
-            vector<int> ans;
-            pair<int, int> root = {y, 0};
-            int d = 0;
-            while (root.first != x || root.second == 1) {
-                // cout << root.first << ' ' << root.second << '\n';
-                ans.push_back(root.first);
-                root = p[root];
-                d += !root.second;
-            }
-            d++;
-            ans.push_back(x);
-            cout << d << '\n';
-            for (int i = -1 + (int) ans.size(); i >= 0; i--) cout << ans[i] << ' ';
+        for (int a = y; a != -1; a = pai[a]) {
+            py.push_back(a);
         }
-        else cout << -1;
+
+        if (px.back() != py.back()) {
+            cout << -1 << '\n';
+            continue;
+        }
+
+        while(px.size() > 1 && py.size() > 1 && px[px.size() - 2] == py[py.size() - 2]) {
+            px.pop_back();
+            py.pop_back();
+        }
+
+        cout << (px.size() + py.size()) / 2 << '\n';
+
+        for (int i = 0; i < px.size(); i++)
+            cout << (px[i] > m ? px[i] - m : px[i]) << ' ';
+        for (int i = py.size() - 2; i >= 0; i--)
+            cout << (py[i] > m ? py[i] - m : py[i]) << ' ';
         cout << '\n';
     }
-
 
     return 0;
 }
