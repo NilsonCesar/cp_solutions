@@ -20,9 +20,7 @@ int main(void) {_
     
     memo[0] = 0;
 
-    for (int i = 1; i <= 9; i++) memo[i] = 1;
-
-    for (int x = 10; x <= n; x++) {
+    for (int x = 1; x <= n; x++) {
         int nLen = (int) log10(x) + 1;
         for (int i = 0; i <= nLen; i++) {
             int d = ith_digit(x, i);
