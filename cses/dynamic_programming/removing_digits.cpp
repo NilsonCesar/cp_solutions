@@ -21,7 +21,7 @@ int main(void) {_
     memo[0] = 0;
 
     for (int x = 1; x <= n; x++) {
-        int nLen = (int) log10(x) + 1;
+        int nLen = (int) log10(x);
         for (int i = 0; i <= nLen; i++) {
             int d = ith_digit(x, i);
             memo[x] = min(memo[x], memo[x - d] + 1);
