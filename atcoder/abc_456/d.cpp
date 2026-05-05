@@ -10,22 +10,14 @@ using namespace std;
 int main(void) {_
     string s;
     cin >> s;
-    int n = (int) s.size();
+    
+    map<char, long long> dp;
 
-    long long ans = 1;
-    int i = 0, j = 1;
-
-    while(j < n) {
-        if (s[j - 1] == s[j]) {
-            i = j;
-            ans = (ans + 1) % MOD;
-        } else {
-            ans = (ans + j - i + 1) % MOD;
-        }
-        j++;
+    for (char n : s) {
+        dp[n] = (dp['a'] + dp['b'] + dp['c'] + 1) % MOD;
     }
 
-    cout << ans << '\n';
+    cout << (((dp['a'] + dp['b']) % MOD) + dp['c']) % MOD << '\n';
 
     return 0;
 }
