@@ -1,0 +1,8 @@
+n = input()
+n = list(map(int, n.split()))
+if n[0] == -1 and n[1] == -1: print('NINGUEM')
+elif n[1]==-1: print('A')
+elif n[0]==-1: print('B')
+elif n[0] == n[1]: print("EMPATE")
+elif n[0]<n[1]: print("A")
+else: print("B")
